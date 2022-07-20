@@ -141,7 +141,7 @@ public class PlayerActivity extends AppCompatActivity {
                 }
                 else {
                     btnPlay.setBackgroundResource(R.drawable.ic_baseline_pause_24);
-                    mediaPlayer.pause();
+                    mediaPlayer.start();
 
                     TranslateAnimation moveAni = new TranslateAnimation(-25, 25, -25,25);
                     moveAni.setInterpolator(new AccelerateInterpolator());
