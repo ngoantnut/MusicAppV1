@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.SurfaceControl;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 public class PlayerActivity extends AppCompatActivity {
     Button btnPlay, btnNext, btnBack, btnFastForward, btnFastBackward;
     TextView txtSongName, txtSongStart, txtSongEnd;
-    SeekBar seekBar;
+    SeekBar seekBarM;
     ImageView imageView;
     BarVisualizer barVisualizer;
     String songName;
@@ -52,7 +53,7 @@ public class PlayerActivity extends AppCompatActivity {
         txtSongEnd = findViewById(R.id.txtSongEnd);
         txtSongStart = findViewById(R.id.txtSongStart);
 
-        seekBar = findViewById(R.id.seekBar);
+        seekBarM = findViewById(R.id.seekBar);
 
         imageView = findViewById(R.id.imgView);
 
@@ -84,7 +85,7 @@ public class PlayerActivity extends AppCompatActivity {
                     try {
                         sleep(500);
                         currentPosition = mediaPlayer.getCurrentPosition();
-                        seekBar.setProgress(currentPosition);
+                        seekBarM.setProgress(currentPosition);
                     }
                     catch (InterruptedException | IllegalStateException e){
                         e.printStackTrace();
@@ -94,11 +95,11 @@ public class PlayerActivity extends AppCompatActivity {
             }
         };
 
-        seekBar.setMax(mediaPlayer.getCurrentPosition());
+        seekBarM.setMax(mediaPlayer.getCurrentPosition());
         updateSeekBar.start();
-        seekBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.purple_700), PorterDuff.Mode.MULTIPLY);
-        seekBar.getThumb().setColorFilter(getResources().getColor(R.color.purple_700), PorterDuff.Mode.SRC_IN);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarM.getProgressDrawable().setColorFilter(getResources().getColor(R.color.purple_700), PorterDuff.Mode.MULTIPLY);
+        seekBarM.getThumb().setColorFilter(getResources().getColor(R.color.purple_700), PorterDuff.Mode.SRC_IN);
+        seekBarM.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -117,6 +118,19 @@ public class PlayerActivity extends AppCompatActivity {
 
         String endTime = createTime(mediaPlayer.getDuration());
         txtSongEnd.setText(endTime);
+
+        final Handler handler = new Handler();
+        final int delay = 1000;
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String currentTime = createTime(mediaPlayer.getCurrentPosition());
+                txtSongStart.setText(currentTime);
+                handler.postDelayed(this,delay);
+
+            }
+        }, delay);
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,7 +183,7 @@ public class PlayerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mediaPlayer.stop();
                 mediaPlayer.release();
-                position = ((position-1)<0)?(mySongs.size()-1):position;
+                position = ((position-1)<0)?(mySongs.size()-1):position-1;
                 Uri uri1 = Uri.parse(mySongs.get(position).toString());
                 mediaPlayer = MediaPlayer.create(getApplicationContext(),uri1);
                 songName = mySongs.get(position).getName();
@@ -177,6 +191,21 @@ public class PlayerActivity extends AppCompatActivity {
                 mediaPlayer.start();
 
                 startAnimation(imageView,-360f);
+            }
+        });
+
+        btnFastForward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition()+10000);
+            }
+        });
+
+
+        btnFastBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition()-10000);
             }
         });
 
