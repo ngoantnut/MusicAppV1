@@ -95,14 +95,19 @@ public class PlayerActivity extends AppCompatActivity {
             }
         };
 
+        seekBarM.setProgress(0);
+        seekBarM.setMax(mediaPlayer.getDuration());
+/*
         seekBarM.setMax(mediaPlayer.getCurrentPosition());
         updateSeekBar.start();
         seekBarM.getProgressDrawable().setColorFilter(getResources().getColor(R.color.purple_700), PorterDuff.Mode.MULTIPLY);
-        seekBarM.getThumb().setColorFilter(getResources().getColor(R.color.purple_700), PorterDuff.Mode.SRC_IN);
+        seekBarM.getThumb().setColorFilter(getResources().getColor(R.color.purple_700), PorterDuff.Mode.SRC_IN);*/
         seekBarM.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                if(mediaPlayer != null && fromUser){
+                    mediaPlayer.seekTo(progress);
+                }
             }
 
             @Override
@@ -112,7 +117,7 @@ public class PlayerActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.seekTo(seekBar.getProgress());
+              //  mediaPlayer.seekTo(seekBar.getProgress());
             }
         });
 

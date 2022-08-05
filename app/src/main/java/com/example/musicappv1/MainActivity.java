@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.karumi.dexter.Dexter;
@@ -26,6 +27,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
@@ -36,8 +38,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = (ListView) findViewById(R.id.listView);
+
         runtimePermission();
     }
+
+
 
     public void runtimePermission() {
         Dexter.withContext(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)
